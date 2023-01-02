@@ -13,6 +13,7 @@ export default function AddUser() {
   const usersCollectionRef = collection(db, "users");
   const createUser = async () => {
     await addDoc(usersCollectionRef, adduser);
+    alert("add user successfully");
   };
   const [adduser, setAddUser] = useState({
     name: "",
@@ -38,7 +39,7 @@ export default function AddUser() {
           style={styles.inputText}
           placeholderTextColor="black"
           autoCapitalize="none"
-          onChangeText={(text) => setAddUser({ ...adduser, age: text })}
+          onChangeText={(text) => setAddUser({ ...adduser, age: Number(text) })}
         />
 
         <Text style={styles.inputLabel}>Mobile Number</Text>
