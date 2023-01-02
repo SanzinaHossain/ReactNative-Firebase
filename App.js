@@ -1,20 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { useEffect, useState } from "react";
+import {
+  Button,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { db } from "./db/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import Datashow from "./Src/Components/DataShow/Datashow";
+import AddUser from "./Src/Components/AddUser/AddUser";
 export default function App() {
+  const [users, setUsers] = useState([]);
+  const usersCollectionRef = collection(db, "users");
+  useEffect(() => {
+    const getUsers = async () => {
+      const data = await getDocs(usersCollectionRef);
+      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getUsers();
+  }, []);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView>
+      <AddUser />
+      {users.map((u, i) => (
+        <Datashow
+          key={i}
+          id={u.id}
+          name={u.name}
+          mobile={u.mobile}
+          age={u.age}
+        />
+      ))}
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({});
